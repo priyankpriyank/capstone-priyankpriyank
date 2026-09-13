@@ -1,0 +1,28 @@
+{
+  "name": "capstone-priyankpriyank",
+  "version": "1.0.0",
+  "description": "The goal is building the Capstone Project",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/priyankpriyank/capstone-priyankpriyank.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/priyankpriyank/capstone-priyankpriyank/issues"
+  },
+  "homepage": "https://github.com/priyankpriyank/capstone-priyankpriyank#readme",
+  "dependencies": {
+    "axios": "^1.20.0",
+    "react-router-dom": "^7.18.3"
+  }
+}
