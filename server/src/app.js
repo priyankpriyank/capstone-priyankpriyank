@@ -3,7 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const pool = require("./config/database");
-
+const authRoutes = require("./routes/auth.routes");
 const app = express();
 
 app.use(cors());
@@ -34,5 +34,7 @@ app.get("/api/health/db", async (req, res) => {
     });
   }
 });
+
+app.use("/api/auth", authRoutes);
 
 module.exports = app;
