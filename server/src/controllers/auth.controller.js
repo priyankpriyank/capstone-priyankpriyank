@@ -66,6 +66,105 @@ async function register(req, res) {
   }
 }
 
+async function login(req, res) {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !email.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required"
+      });
+    }
+
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        message: "Password is required"
+      });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const result = await pool.query(
+      `SELECT user_id, full_name, email, password_hash, role, account_status
+       FROM users
+       WHERE email = $1`,
+      [normalizedEmail]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password"
+      });
+    }
+
+    const user = result.rows[0];
+
+    // Block banned and deactivated accounts
+    if (
+      user.account_status === "banned" ||
+      user.account_status === "deactivated"
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "This account is not allowed to log in"
+      });
+    }
+
+    const passwordMatches = await bcrypt.compare(
+      password,
+      user.password_hash
+    );
+
+    if (!passwordMatches) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password"
+      });
+    }
+
+    const token = require("jsonwebtoken").sign(
+      {
+        userId: user.user_id,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h"
+      }
+    );
+
+    res.cookie("nexto_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 1000
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user: {
+        user_id: user.user_id,
+        full_name: user.full_name,
+        email: user.email,
+        role: user.role,
+        account_status: user.account_status
+      }
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to log in"
+    });
+  }
+}
+
 module.exports = {
-  register
+  register,
+  login
 };
