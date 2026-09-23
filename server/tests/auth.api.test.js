@@ -13,8 +13,6 @@ describe("POST /api/auth/register", () => {
       "DELETE FROM users WHERE email = $1",
       [testEmail]
     );
-
-    await pool.end();
   });
 
 
@@ -134,6 +132,83 @@ describe("POST /api/auth/login", () => {
       "Invalid email or password"
     );
   });
+
+  test("API-07: blocks banned users from logging in", async () => {
+  const bannedEmail = `banned-${Date.now()}@example.com`;
+  const password = "Password@123";
+  const bcrypt = require("bcrypt");
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  await pool.query(
+    `INSERT INTO users (full_name, email, password_hash, account_status)
+     VALUES ($1, $2, $3, $4)`,
+    [
+      "Banned Test User",
+      bannedEmail,
+      passwordHash,
+      "banned"
+    ]
+  );
+
+  const response = await request(app)
+    .post("/api/auth/login")
+    .send({
+      email: bannedEmail,
+      password
+    });
+
+  expect(response.statusCode).toBe(403);
+  expect(response.body.success).toBe(false);
+  expect(response.body.message).toBe(
+    "This account is not allowed to log in"
+  );
+
+  await pool.query(
+    "DELETE FROM users WHERE email = $1",
+    [bannedEmail]
+  );
+});
+
+test("API-07: blocks deactivated users from logging in", async () => {
+  const deactivatedEmail = `deactivated-${Date.now()}@example.com`;
+  const password = "Password@123";
+  const bcrypt = require("bcrypt");
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  await pool.query(
+    `INSERT INTO users (full_name, email, password_hash, account_status)
+     VALUES ($1, $2, $3, $4)`,
+    [
+      "Deactivated Test User",
+      deactivatedEmail,
+      passwordHash,
+      "deactivated"
+    ]
+  );
+
+  const response = await request(app)
+    .post("/api/auth/login")
+    .send({
+      email: deactivatedEmail,
+      password
+    });
+
+  expect(response.statusCode).toBe(403);
+  expect(response.body.success).toBe(false);
+  expect(response.body.message).toBe(
+    "This account is not allowed to log in"
+  );
+
+  await pool.query(
+    "DELETE FROM users WHERE email = $1",
+    [deactivatedEmail]
+  );
+});
+
+
+  
 });
 
 describe("POST /api/auth/logout", () => {
@@ -152,4 +227,44 @@ describe("POST /api/auth/logout", () => {
       cookie.startsWith("nexto_token=")
     )).toBe(true);
   });
+});
+
+test("API-07: blocks banned users from logging in", async () => {
+  const bannedEmail = `banned-${Date.now()}@example.com`;
+  const password = "Password@123";
+  const bcrypt = require("bcrypt");
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  await pool.query(
+    `INSERT INTO users (full_name, email, password_hash, account_status)
+     VALUES ($1, $2, $3, $4)`,
+    [
+      "Banned Test User",
+      bannedEmail,
+      passwordHash,
+      "banned"
+    ]
+  );
+
+  const response = await request(app)
+    .post("/api/auth/login")
+    .send({
+      email: bannedEmail,
+      password
+    });
+
+  expect(response.statusCode).toBe(403);
+  expect(response.body.success).toBe(false);
+  expect(response.body.message).toBe(
+    "This account is not allowed to log in"
+  );
+
+  await pool.query(
+    "DELETE FROM users WHERE email = $1",
+    [bannedEmail]
+  );
+});
+afterAll(async () => {
+  await pool.end();
 });
