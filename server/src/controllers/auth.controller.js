@@ -2,6 +2,10 @@ const pool = require("../config/database");
 const bcrypt = require("bcrypt");
 const { validateRegistration } = require("../validators/auth.validator");
 
+const {
+  createResetToken
+} = require("../services/passwordReset.service");
+
 async function register(req, res) {
   try {
     const { fullName, email, password } = req.body;
@@ -186,8 +190,62 @@ async function logout(req, res) {
   }
 }
 
+async function forgotPassword(req, res) {
+  try {
+    const { email } = req.body;
+
+    if (!email || !email.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required"
+      });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const result = await pool.query(
+      `SELECT user_id, email
+       FROM users
+       WHERE email = $1`,
+      [normalizedEmail]
+    );
+
+    // Do not reveal whether an email exists.
+    if (result.rows.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "If an account exists, a password reset link has been requested"
+      });
+    }
+
+    const user = result.rows[0];
+
+    const token = createResetToken(user.user_id);
+
+    // Temporary development output.
+    // We will replace this with email delivery later.
+    console.log(
+      `Password reset token for ${user.email}: ${token}`
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "If an account exists, a password reset link has been requested",
+      resetToken: token
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to process password reset request"
+    });
+  }
+}
+
 module.exports = {
   register,
   login,
-  logout
+  logout,
+  forgotPassword
 };
