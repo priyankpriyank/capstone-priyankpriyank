@@ -3,7 +3,9 @@ const bcrypt = require("bcrypt");
 const { validateRegistration } = require("../validators/auth.validator");
 
 const {
-  createResetToken
+  createResetToken,
+  getResetToken,
+  deleteResetToken
 } = require("../services/passwordReset.service");
 
 async function register(req, res) {
@@ -243,9 +245,80 @@ async function forgotPassword(req, res) {
   }
 }
 
+async function resetPassword(req, res) {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: "Reset token is required"
+      });
+    }
+
+    if (!newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New password is required"
+      });
+    }
+
+    // Validate the new password using the same registration rules
+    const validation = validateRegistration({
+      fullName: "Password Reset",
+      email: "reset@example.com",
+      password: newPassword
+    });
+
+    if (!validation.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid new password",
+        errors: {
+          password: validation.errors.password
+        }
+      });
+    }
+
+    const resetData = getResetToken(token);
+
+    if (!resetData) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired reset token"
+      });
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+
+    await pool.query(
+      `UPDATE users
+       SET password_hash = $1
+       WHERE user_id = $2`,
+      [passwordHash, resetData.userId]
+    );
+
+    // Make the token unusable after successful reset
+    deleteResetToken(token);
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successfully"
+    });
+  } catch (error) {
+    console.error("Reset password error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to reset password"
+    });
+  }
+}
+
 module.exports = {
   register,
   login,
   logout,
-  forgotPassword
+  forgotPassword,
+  resetPassword
 };
