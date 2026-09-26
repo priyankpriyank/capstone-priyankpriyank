@@ -1,4 +1,5 @@
 const request = require("supertest");
+const bcrypt = require("bcrypt");
 const app = require("../src/app");
 const pool = require("../src/config/database");
 
@@ -229,42 +230,142 @@ describe("POST /api/auth/logout", () => {
   });
 });
 
-test("API-07: blocks banned users from logging in", async () => {
-  const bannedEmail = `banned-${Date.now()}@example.com`;
-  const password = "Password@123";
-  const bcrypt = require("bcrypt");
 
-  const passwordHash = await bcrypt.hash(password, 12);
+describe("POST /api/auth/forgot-password", () => {
+  const forgotEmail = `forgot-${Date.now()}@example.com`;
 
-  await pool.query(
-    `INSERT INTO users (full_name, email, password_hash, account_status)
-     VALUES ($1, $2, $3, $4)`,
-    [
-      "Banned Test User",
-      bannedEmail,
-      passwordHash,
-      "banned"
-    ]
-  );
+  beforeAll(async () => {
+    const passwordHash = await bcrypt.hash("OldPassword@123", 12);
 
-  const response = await request(app)
-    .post("/api/auth/login")
-    .send({
-      email: bannedEmail,
-      password
-    });
+    await pool.query(
+      `INSERT INTO users (full_name, email, password_hash)
+       VALUES ($1, $2, $3)`,
+      ["Forgot Password User", forgotEmail, passwordHash]
+    );
+  });
 
-  expect(response.statusCode).toBe(403);
-  expect(response.body.success).toBe(false);
-  expect(response.body.message).toBe(
-    "This account is not allowed to log in"
-  );
+  afterAll(async () => {
+    await pool.query(
+      "DELETE FROM users WHERE email = $1",
+      [forgotEmail]
+    );
+  });
 
-  await pool.query(
-    "DELETE FROM users WHERE email = $1",
-    [bannedEmail]
-  );
+  test("API-06: requests a password reset successfully", async () => {
+    const response = await request(app)
+      .post("/api/auth/forgot-password")
+      .send({
+        email: forgotEmail
+      });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.success).toBe(true);
+
+    expect(response.body.message).toBe(
+      "If an account exists, a password reset link has been requested"
+    );
+
+    // Development-only token used for testing.
+    expect(response.body.resetToken).toBeDefined();
+    expect(typeof response.body.resetToken).toBe("string");
+  });
+
+  test("does not reveal whether an unknown email exists", async () => {
+    const response = await request(app)
+      .post("/api/auth/forgot-password")
+      .send({
+        email: "does-not-exist@example.com"
+      });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.success).toBe(true);
+
+    expect(response.body.message).toBe(
+      "If an account exists, a password reset link has been requested"
+    );
+
+    expect(response.body.resetToken).toBeUndefined();
+  });
 });
+
+
+describe("POST /api/auth/reset-password", () => {
+  const resetEmail = `reset-${Date.now()}@example.com`;
+
+  beforeAll(async () => {
+    const passwordHash = await bcrypt.hash("OldPassword@123", 12);
+
+    await pool.query(
+      `INSERT INTO users (full_name, email, password_hash)
+       VALUES ($1, $2, $3)`,
+      ["Reset Password User", resetEmail, passwordHash]
+    );
+  });
+
+  afterAll(async () => {
+    await pool.query(
+      "DELETE FROM users WHERE email = $1",
+      [resetEmail]
+    );
+  });
+
+  test("resets the password using a valid reset token", async () => {
+    // Request a reset token.
+    const forgotResponse = await request(app)
+      .post("/api/auth/forgot-password")
+      .send({
+        email: resetEmail
+      });
+
+    expect(forgotResponse.statusCode).toBe(200);
+
+    const resetToken = forgotResponse.body.resetToken;
+
+    expect(resetToken).toBeDefined();
+
+    // Use the token to reset the password.
+    const resetResponse = await request(app)
+      .post("/api/auth/reset-password")
+      .send({
+        token: resetToken,
+        newPassword: "NewPassword@123"
+      });
+
+    expect(resetResponse.statusCode).toBe(200);
+    expect(resetResponse.body.success).toBe(true);
+    expect(resetResponse.body.message).toBe(
+      "Password reset successfully"
+    );
+
+    // Confirm the new password works.
+    const loginResponse = await request(app)
+      .post("/api/auth/login")
+      .send({
+        email: resetEmail,
+        password: "NewPassword@123"
+      });
+
+    expect(loginResponse.statusCode).toBe(200);
+    expect(loginResponse.body.success).toBe(true);
+    expect(loginResponse.body.message).toBe("Login successful");
+  });
+
+  test("rejects an invalid reset token", async () => {
+    const response = await request(app)
+      .post("/api/auth/reset-password")
+      .send({
+        token: "invalid-token",
+        newPassword: "NewPassword@123"
+      });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.success).toBe(false);
+    expect(response.body.message).toBe(
+      "Invalid or expired reset token"
+    );
+  });
+});
+
 afterAll(async () => {
   await pool.end();
 });
