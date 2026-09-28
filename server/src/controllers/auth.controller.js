@@ -315,10 +315,53 @@ async function resetPassword(req, res) {
   }
 }
 
+async function getCurrentUser(req, res) {
+  try {
+    const result = await pool.query(
+      `SELECT user_id, full_name, email, role, account_status
+       FROM users
+       WHERE user_id = $1`,
+      [req.user.userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({
+        success: false,
+        message: "User account not found"
+      });
+    }
+
+    const user = result.rows[0];
+
+    if (
+      user.account_status === "banned" ||
+      user.account_status === "deactivated"
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "This account is not allowed to access the application"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error("Get current user error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to retrieve current user"
+    });
+  }
+}
+
 module.exports = {
   register,
   login,
   logout,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  getCurrentUser
 };
