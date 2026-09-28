@@ -1,34 +1,26 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function Home() {
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
-
-  async function handleLogout() {
-    await logout();
-    navigate("/login");
-  }
+  const { user } = useAuth();
 
   return (
     <div>
       <h1>Welcome to NexTo</h1>
 
       <p>
-        Hello, {user.full_name}
+        Buy and sell items in your marketplace.
       </p>
 
-      <p>
-        Email: {user.email}
-      </p>
+      {user && (
+        <p>
+          Welcome, {user.full_name}!
+        </p>
+      )}
 
-      <p>
-        Role: {user.role}
-      </p>
-
-      <button onClick={handleLogout}>
-        Logout
-      </button>
+      <Link to="/listings">
+        Browse Listings
+      </Link>
     </div>
   );
 }
