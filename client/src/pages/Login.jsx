@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
+  const { login, loading } = useAuth();
 
-  const [formData, setFormData] = useState({    
+  const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
 
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   function handleChange(event) {
     setFormData({
@@ -24,28 +23,19 @@ function Login() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    setMessage("");
     setError("");
-    setLoading(true);
 
-    try {
-      const response = await api.post("/auth/login", formData);
+    const result = await login(
+      formData.email,
+      formData.password
+    );
 
-      setMessage(response.data.message);
-
-      console.log("Logged in user:", response.data.user);
-
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
-    } catch (error) {
-      setError(
-        error.response?.data?.message ||
-        "Unable to log in"
-      );
-    } finally {
-      setLoading(false);
+    if (!result.success) {
+      setError(result.message);
+      return;
     }
+
+    navigate("/");
   }
 
   return (
@@ -55,6 +45,7 @@ function Login() {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email</label>
+
           <input
             id="email"
             name="email"
@@ -67,6 +58,7 @@ function Login() {
 
         <div>
           <label htmlFor="password">Password</label>
+
           <input
             id="password"
             name="password"
@@ -82,18 +74,11 @@ function Login() {
         </button>
       </form>
 
-      {message && <p>{message}</p>}
       {error && <p>{error}</p>}
 
       <p>
         Don't have an account?{" "}
         <Link to="/register">Register</Link>
-      </p>
-
-      <p>
-        <Link to="/forgot-password">
-          Forgot your password?
-        </Link>
       </p>
     </div>
   );
