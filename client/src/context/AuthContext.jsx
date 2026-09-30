@@ -60,6 +60,10 @@ export function AuthProvider({ children }) {
     }
   }
 
+  function updateUser(updatedData) {
+    setUser((prev) => (prev ? { ...prev, ...updatedData } : updatedData));
+  }
+
   useEffect(() => {
     checkAuth();
   }, []);
@@ -70,7 +74,8 @@ export function AuthProvider({ children }) {
         user,
         loading,
         login,
-        logout
+        logout,
+        updateUser
       }}
     >
       {children}
