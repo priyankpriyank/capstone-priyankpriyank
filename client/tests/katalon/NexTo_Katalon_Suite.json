@@ -10,7 +10,7 @@
       "commands": [
         { "command": "open", "target": "/register", "value": "" },
         { "command": "waitForElementPresent", "target": "id=fullName", "value": "5000" },
-        { "command": "executeScript", "target": "return \"katalon_\" + Math.floor(Date.now() / 1000) + \"@nexto.com\";", "value": "testEmail" },
+        { "command": "storeEval", "target": "\"katalon_\" + new Date().getTime() + \"@nexto.com\"", "value": "testEmail" },
         { "command": "type", "target": "id=fullName", "value": "Katalon Automated User" },
         { "command": "type", "target": "id=email", "value": "${testEmail}" },
         { "command": "type", "target": "id=password", "value": "P@ssw0rd1!" },
@@ -36,7 +36,7 @@
       "commands": [
         { "command": "open", "target": "/register", "value": "" },
         { "command": "waitForElementPresent", "target": "id=fullName", "value": "5000" },
-        { "command": "executeScript", "target": "return \"profile_\" + Math.floor(Date.now() / 1000) + \"@nexto.com\";", "value": "profileEmail" },
+        { "command": "storeEval", "target": "\"profile_\" + new Date().getTime() + \"@nexto.com\"", "value": "profileEmail" },
         { "command": "type", "target": "id=fullName", "value": "Initial Profile Name" },
         { "command": "type", "target": "id=email", "value": "${profileEmail}" },
         { "command": "type", "target": "id=password", "value": "P@ssw0rd1!" },
@@ -57,7 +57,7 @@
         { "command": "type", "target": "id=profile-fullName-input", "value": "Updated Katalon Name" },
         { "command": "click", "target": "id=profile-save-info-btn", "value": "" },
         { "command": "waitForElementPresent", "target": "id=profile-info-success", "value": "5000" },
-        { "command": "assertText", "target": "id=profile-info-success", "value": "✓ Profile updated successfully." },
+        { "command": "assertText", "target": "id=profile-info-success", "value": "✓ Profile updated successfully" },
         { "command": "click", "target": "id=nav-btn-logout", "value": "" },
         { "command": "waitForElementPresent", "target": "id=login-submit-btn", "value": "5000" }
       ]
@@ -68,7 +68,7 @@
       "commands": [
         { "command": "open", "target": "/register", "value": "" },
         { "command": "waitForElementPresent", "target": "id=fullName", "value": "5000" },
-        { "command": "executeScript", "target": "return \"pwd_test_\" + Math.floor(Date.now() / 1000) + \"@nexto.com\";", "value": "testEmail" },
+        { "command": "storeEval", "target": "\"pwd_test_\" + new Date().getTime() + \"@nexto.com\"", "value": "testEmail" },
         { "command": "type", "target": "id=fullName", "value": "Password Test User" },
         { "command": "type", "target": "id=email", "value": "${testEmail}" },
         { "command": "type", "target": "id=password", "value": "OldP@ssw0rd1!" },
@@ -88,7 +88,7 @@
         { "command": "type", "target": "id=profile-confirmPassword-input", "value": "NewSecureP@ss2#" },
         { "command": "click", "target": "id=profile-change-password-btn", "value": "" },
         { "command": "waitForElementPresent", "target": "id=profile-password-success", "value": "5000" },
-        { "command": "assertText", "target": "id=profile-password-success", "value": "✓ Password changed successfully." },
+        { "command": "assertText", "target": "id=profile-password-success", "value": "✓ Password changed successfully" },
         { "command": "click", "target": "id=nav-btn-logout", "value": "" },
         { "command": "waitForElementPresent", "target": "id=login-submit-btn", "value": "5000" },
         { "command": "type", "target": "id=email", "value": "${testEmail}" },
@@ -99,6 +99,39 @@
         { "command": "click", "target": "id=login-submit-btn", "value": "" },
         { "command": "waitForElementPresent", "target": "id=home-welcome-title", "value": "5000" },
         { "command": "assertText", "target": "id=home-welcome-title", "value": "Welcome to NexTo" }
+      ]
+    },
+    {
+      "id": "fe-04",
+      "name": "FE-04_Create_Listing_And_View_Details",
+      "commands": [
+        { "command": "open", "target": "/login", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=email", "value": "5000" },
+        { "command": "storeEval", "target": "\"seller_\" + new Date().getTime() + \"@nexto.com\"", "value": "sellerEmail" },
+        { "command": "open", "target": "/register", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=fullName", "value": "5000" },
+        { "command": "type", "target": "id=fullName", "value": "Listing Seller User" },
+        { "command": "type", "target": "id=email", "value": "${sellerEmail}" },
+        { "command": "type", "target": "id=password", "value": "P@ssw0rd1!" },
+        { "command": "click", "target": "id=register-submit-btn", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=register-success-msg", "value": "5000" },
+        { "command": "pause", "target": "1500", "value": "" },
+        { "command": "open", "target": "/login", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=email", "value": "5000" },
+        { "command": "type", "target": "id=email", "value": "${sellerEmail}" },
+        { "command": "type", "target": "id=password", "value": "P@ssw0rd1!" },
+        { "command": "click", "target": "id=login-submit-btn", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=nav-link-create-listing", "value": "5000" },
+        { "command": "click", "target": "id=nav-link-create-listing", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=listing-title-input", "value": "5000" },
+        { "command": "type", "target": "id=listing-title-input", "value": "Apple MacBook Pro 14 M1" },
+        { "command": "select", "target": "id=listing-category-select", "value": "label=Electronics" },
+        { "command": "type", "target": "id=listing-price-input", "value": "1499.00" },
+        { "command": "type", "target": "id=listing-description-input", "value": "Apple MacBook Pro 14-inch space grey, 16GB memory, 512GB SSD." },
+        { "command": "click", "target": "id=listing-submit-btn", "value": "" },
+        { "command": "pause", "target": "2000", "value": "" },
+        { "command": "open", "target": "/listings", "value": "" },
+        { "command": "waitForElementPresent", "target": "css=.listing-card", "value": "5000" }
       ]
     }
   ]
