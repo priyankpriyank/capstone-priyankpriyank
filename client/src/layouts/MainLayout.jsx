@@ -17,24 +17,24 @@ function MainLayout() {
           <Link to="/">NexTo</Link>
 
           <div>
-            <Link to="/">Home</Link>
-            <Link to="/listings">Browse Listings</Link>
+            <Link id="nav-link-home" to="/">Home</Link>
+            <Link id="nav-link-listings" to="/listings">Browse Listings</Link>
 
             {user && (
               <>
-                <Link to="/create-listing">
+                <Link id="nav-link-create-listing" to="/create-listing">
                   Create Listing
                 </Link>
 
-                <Link to="/messages">
+                <Link id="nav-link-messages" to="/messages">
                   Messages
                 </Link>
 
-                <Link to="/profile">
+                <Link id="nav-link-profile" to="/profile">
                   Profile
                 </Link>
 
-                <button onClick={handleLogout}>
+                <button id="nav-btn-logout" onClick={handleLogout}>
                   Logout
                 </button>
               </>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link rel="selenium.base" href="http://localhost:5173" />
+	<title>FE-01_Register_And_Login</title>
+</head>
+
+<body>
+	<table cellpadding="1" cellspacing="1" border="1">
+		<thead>
+			<tr>
+				<td rowspan="1" colspan="3">FE-01: Register &amp; Login Flow (Req 1.1 - 1.3)</td>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- 1. Open Registration Page -->
+			<tr>
+				<td>open</td>
+				<td>/register</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>waitForElementPresent</td>
+				<td>id=fullName</td>
+				<td>5000</td>
+			</tr>
+			<!-- 2. Generate unique email to ensure test repeatability -->
+			<tr>
+				<td>executeScript</td>
+				<td>return &quot;katalon_&quot; + Math.floor(Date.now() / 1000) + &quot;@nexto.com&quot;;</td>
+				<td>testEmail</td>
+			</tr>
+			<!-- 3. Fill in registration form -->
+			<tr>
+				<td>type</td>
+				<td>id=fullName</td>
+				<td>Katalon Automated User</td>
+			</tr>
+			<tr>
+				<td>type</td>
+				<td>id=email</td>
+				<td>${testEmail}</td>
+			</tr>
+			<tr>
+				<td>type</td>
+				<td>id=password</td>
+				<td>P@ssw0rd1!</td>
+			</tr>
+			<!-- 4. Submit Registration -->
+			<tr>
+				<td>click</td>
+				<td>id=register-submit-btn</td>
+				<td></td>
+			</tr>
+			<!-- 5. Verify success and wait for login page -->
+			<tr>
+				<td>waitForElementPresent</td>
+				<td>id=register-success-msg</td>
+				<td>5000</td>
+			</tr>
+			<tr>
+				<td>assertText</td>
+				<td>id=register-success-msg</td>
+				<td>Account created successfully</td>
+			</tr>
+			<!-- 6. Wait for redirect or open login -->
+			<tr>
+				<td>pause</td>
+				<td>1500</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>open</td>
+				<td>/login</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>waitForElementPresent</td>
+				<td>id=email</td>
+				<td>5000</td>
+			</tr>
+			<!-- 7. Fill in Login Credentials -->
+			<tr>
+				<td>type</td>
+				<td>id=email</td>
+				<td>${testEmail}</td>
+			</tr>
+			<tr>
+				<td>type</td>
+				<td>id=password</td>
+				<td>P@ssw0rd1!</td>
+			</tr>
+			<tr>
+				<td>click</td>
+				<td>id=login-submit-btn</td>
+				<td></td>
+			</tr>
+			<!-- 8. Verify redirected to Home page -->
+			<tr>
+				<td>waitForElementPresent</td>
+				<td>id=home-welcome-title</td>
+				<td>5000</td>
+			</tr>
+			<tr>
+				<td>assertText</td>
+				<td>id=home-welcome-title</td>
+				<td>Welcome to NexTo</td>
+			</tr>
+			<tr>
+				<td>assertElementPresent</td>
+				<td>id=nav-btn-logout</td>
+				<td></td>
+			</tr>
+			<!-- 9. Test Logout -->
+			<tr>
+				<td>click</td>
+				<td>id=nav-btn-logout</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>waitForElementPresent</td>
+				<td>id=login-submit-btn</td>
+				<td>5000</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+
+</html>

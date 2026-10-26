@@ -69,12 +69,12 @@ function Login() {
           />
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button id="login-submit-btn" type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
 
-      {error && <p>{error}</p>}
+      {error && <p id="login-error-msg">{error}</p>}
 
       <p>
         Don't have an account?{" "}

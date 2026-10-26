@@ -98,13 +98,13 @@ function Register() {
           />
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button id="register-submit-btn" type="submit" disabled={loading}>
           {loading ? "Creating account..." : "Register"}
         </button>
       </form>
 
-      {message && <p>{message}</p>}
-      {error && <p>{error}</p>}
+      {message && <p id="register-success-msg">{message}</p>}
+      {error && <p id="register-error-msg">{error}</p>}
 
       <p>
         Already have an account?{" "}

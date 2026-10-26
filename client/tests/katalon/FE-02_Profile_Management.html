@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:5173" />
+<title>FE-02_Profile_Management</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">FE-02: User Profile Management Flow (Req 2.1 - 2.2, Mockup 6)</td></tr>
+</thead>
+<tbody>
+<!-- 1. Register a dedicated test account -->
+<tr>
+	<td>open</td>
+	<td>/register</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=fullName</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>executeScript</td>
+	<td>return &quot;profile_&quot; + Math.floor(Date.now() / 1000) + &quot;@nexto.com&quot;;</td>
+	<td>profileEmail</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=fullName</td>
+	<td>Initial Profile Name</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${profileEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=register-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=register-success-msg</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+<!-- 2. Log in with the account -->
+<tr>
+	<td>open</td>
+	<td>/login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=email</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${profileEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=login-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=nav-link-profile</td>
+	<td>5000</td>
+</tr>
+<!-- 3. Navigate to Profile Page (Req 2.1) -->
+<tr>
+	<td>click</td>
+	<td>id=nav-link-profile</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=profile-avatar-circle</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>id=profile-avatar-circle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>id=profile-stat-active</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>id=profile-stat-sold</td>
+	<td></td>
+</tr>
+<!-- 4. Update Profile Name (Req 2.2) -->
+<tr>
+	<td>type</td>
+	<td>id=profile-fullName-input</td>
+	<td>Updated Katalon Name</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=profile-save-info-btn</td>
+	<td></td>
+</tr>
+<!-- 5. Verify confirmation message (Req 3.2) -->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=profile-info-success</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=profile-info-success</td>
+	<td>✓ Profile updated successfully.</td>
+</tr>
+<!-- 6. Clean logout -->
+<tr>
+	<td>click</td>
+	<td>id=nav-btn-logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=login-submit-btn</td>
+	<td>5000</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

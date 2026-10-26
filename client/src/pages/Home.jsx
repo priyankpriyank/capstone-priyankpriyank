@@ -6,14 +6,14 @@ function Home() {
 
   return (
     <div>
-      <h1>Welcome to NexTo</h1>
+      <h1 id="home-welcome-title">Welcome to NexTo</h1>
 
       <p>
         Buy and sell items in your marketplace.
       </p>
 
       {user && (
-        <p>
+        <p id="home-user-greeting">
           Welcome, {user.full_name}!
         </p>
       )}
