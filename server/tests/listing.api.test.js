@@ -174,4 +174,115 @@ describe("Listings API Endpoints (/api/listings)", () => {
       expect(response.body.message).toBe("Listing not found or does not exist");
     });
   });
+
+  describe("GET /api/listings/user/me (User Own Listings - Req 2.1)", () => {
+    test("API-15: returns authenticated user's own listings", async () => {
+      const response = await request(app)
+        .get("/api/listings/user/me")
+        .set("Cookie", authCookie);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(Array.isArray(response.body.listings)).toBe(true);
+      expect(response.body.listings.some((l) => String(l.listing_id) === String(createdListingId))).toBe(true);
+    });
+  });
+
+  describe("PUT /api/listings/:id (Edit Listing - Req 4.4)", () => {
+    let otherUserCookie = null;
+    let otherUserId = null;
+
+    beforeAll(async () => {
+      // Create a second user to test authorization
+      const otherEmail = `other-${Date.now()}@example.com`;
+      const hash = await bcrypt.hash("OtherP@ss1!", 12);
+      const res = await pool.query(
+        "INSERT INTO users (full_name, email, password_hash, role, account_status) VALUES ('Other User', $1, $2, 'User', 'active') RETURNING user_id",
+        [otherEmail, hash]
+      );
+      otherUserId = res.rows[0].user_id;
+
+      const loginRes = await request(app)
+        .post("/api/auth/login")
+        .send({ email: otherEmail, password: "OtherP@ss1!" });
+      otherCookie = loginRes.headers["set-cookie"];
+      otherUserCookie = otherCookie;
+    });
+
+    afterAll(async () => {
+      if (otherUserId) {
+        await pool.query("DELETE FROM users WHERE user_id = $1", [otherUserId]);
+      }
+    });
+
+    test("API-16: rejects update by non-owner with 403 Forbidden (Req 4.4)", async () => {
+      const response = await request(app)
+        .put(`/api/listings/${createdListingId}`)
+        .set("Cookie", otherUserCookie)
+        .send({
+          title: "Hacked Title",
+          price: 100.0
+        });
+
+      expect(response.statusCode).toBe(403);
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toContain("Forbidden");
+    });
+
+    test("API-17: owner updates listing successfully (Req 4.4)", async () => {
+      const response = await request(app)
+        .put(`/api/listings/${createdListingId}`)
+        .set("Cookie", authCookie)
+        .send({
+          title: "Sony WH-1000XM4 Headphones (Updated)",
+          price: 219.99
+        });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.listing.title).toBe("Sony WH-1000XM4 Headphones (Updated)");
+      expect(Number(response.body.listing.price)).toBe(219.99);
+    });
+  });
+
+  describe("PATCH /api/listings/:id/sold (Mark as Sold - Req 4.6)", () => {
+    test("API-18: owner marks listing as sold", async () => {
+      const response = await request(app)
+        .patch(`/api/listings/${createdListingId}/sold`)
+        .set("Cookie", authCookie)
+        .send({ status: "sold" });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.listing.status).toBe("sold");
+    });
+
+    test("API-19: owner toggles listing back to active", async () => {
+      const response = await request(app)
+        .patch(`/api/listings/${createdListingId}/sold`)
+        .set("Cookie", authCookie);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.listing.status).toBe("active");
+    });
+  });
+
+  describe("DELETE /api/listings/:id (Delete Listing - Req 4.5)", () => {
+    test("API-20: owner deletes listing successfully", async () => {
+      const response = await request(app)
+        .delete(`/api/listings/${createdListingId}`)
+        .set("Cookie", authCookie);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBe("Listing deleted successfully");
+
+      // Verify subsequent GET returns 404
+      const getRes = await request(app).get(`/api/listings/${createdListingId}`);
+      expect(getRes.statusCode).toBe(404);
+
+      createdListingId = null; // Prevent double delete in afterAll
+    });
+  });
 });

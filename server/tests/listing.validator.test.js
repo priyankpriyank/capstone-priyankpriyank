@@ -1,4 +1,7 @@
-const { validateListingCreation } = require("../src/validators/listing.validator");
+const {
+  validateListingCreation,
+  validateListingUpdate
+} = require("../src/validators/listing.validator");
 
 describe("Listing Validator - validateListingCreation", () => {
   test("passes validation with all valid fields and price > 0", () => {
@@ -103,5 +106,45 @@ describe("Listing Validator - validateListingCreation", () => {
 
     expect(result.isValid).toBe(false);
     expect(result.errors.photos).toBe("At least one listing photo is required");
+  });
+});
+
+describe("Listing Validator - validateListingUpdate (Week 6)", () => {
+  test("passes validation with updated title, price > 0, and status", () => {
+    const result = validateListingUpdate({
+      title: "Updated Title Here",
+      price: "499.99",
+      status: "sold"
+    });
+
+    expect(result.isValid).toBe(true);
+    expect(result.errors).toEqual({});
+  });
+
+  test("rejects update when updated price is <= 0 (Req 3.2.1)", () => {
+    const result = validateListingUpdate({
+      price: 0
+    });
+
+    expect(result.isValid).toBe(false);
+    expect(result.errors.price).toBe("Price must be greater than zero");
+  });
+
+  test("rejects update when title is shorter than 3 characters", () => {
+    const result = validateListingUpdate({
+      title: "xy"
+    });
+
+    expect(result.isValid).toBe(false);
+    expect(result.errors.title).toBe("Title must be at least 3 characters long");
+  });
+
+  test("rejects update when status is invalid", () => {
+    const result = validateListingUpdate({
+      status: "archived"
+    });
+
+    expect(result.isValid).toBe(false);
+    expect(result.errors.status).toBe("Status must be either 'active' or 'sold'");
   });
 });
