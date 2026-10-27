@@ -11,6 +11,8 @@ This guide documents how to execute the automated frontend tests for **NexTo** u
 | **FE-01** | `FE-01_Register_And_Login` | Dynamic User Registration → Login verification → Welcome screen check → Logout | **Req 1.1, 1.2, 1.3** |
 | **FE-02** | `FE-02_Profile_Management` | Registration → Login → Profile view (Sidebar + Stats cards) → Edit Full Name → Save & Confirm | **Req 2.1, 2.2, Mockup 6** |
 | **FE-03** | `FE-03_Password_Change_And_Relogin` | Login → Navigate to Profile → Change Password (Rule 1.1.2) → Logout → Verify old password fails → Verify new password logs in | **Req 2.3, 1.1.2, 1.2** |
+| **FE-04** | `FE-04_Create_Listing_And_View_Details` | Login → Create Listing form validation → Submit item → Redirect & verify card in listings feed | **Req 3.1, 3.2, 4.1** |
+| **FE-05** | `FE-05_Listing_Management_Edit_Sold_Delete` | Create Listing → View Details toolbar → Mark Sold badge → Edit Price drawer → Delete confirmation modal | **Req 4.4, 4.5, 4.6 (Milestone 2)** |
 
 ---
 

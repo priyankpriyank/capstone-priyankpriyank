@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://seleniumhq.org/profile/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>FE-05: Listing Management Flow (Req 4.4 - 4.6, Milestone 2)</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">FE-05: Listing Management Flow (Req 4.4 - 4.6, Milestone 2)</td></tr>
+</thead><tbody>
+<!-- 1. Generate unique dynamic credentials using storeEval -->
+<tr>
+	<td>storeEval</td>
+	<td>&quot;katalon_w6_&quot; + new Date().getTime() + &quot;@nexto.com&quot;</td>
+	<td>testEmail</td>
+</tr>
+<tr>
+	<td>storeEval</td>
+	<td>&quot;Listing Owner &quot; + new Date().getTime().toString().slice(-4)</td>
+	<td>testName</td>
+</tr>
+
+<!-- 2. Register new test user -->
+<tr>
+	<td>open</td>
+	<td>/register</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=fullName</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=fullName</td>
+	<td>${testName}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${testEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=register-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=register-success-msg</td>
+	<td>5000</td>
+</tr>
+
+<!-- 3. Sign In -->
+<tr>
+	<td>open</td>
+	<td>/login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=email</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${testEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=login-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=nav-btn-logout</td>
+	<td>5000</td>
+</tr>
+
+<!-- 4. Create a Listing to Manage -->
+<tr>
+	<td>open</td>
+	<td>/create-listing</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listing-title-input</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=listing-title-input</td>
+	<td>Bose QuietComfort 45 Headphones</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=listing-category-select</td>
+	<td>index=1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=listing-price-input</td>
+	<td>289.00</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=listing-description-input</td>
+	<td>Authentic Bose QuietComfort headphones with noise cancelling. Barely used with carrying case.</td>
+</tr>
+
+<!-- Attach sample photo data for test -->
+<tr>
+	<td>storeEval</td>
+	<td>(function() { var dt = new DataTransfer(); var f = new File(['dummy content'], 'bose-qc45.jpg', { type: 'image/jpeg' }); dt.items.add(f); var inp = document.getElementById('listing-photos-input'); inp.files = dt.files; inp.dispatchEvent(new Event('change', { bubbles: true })); return true; })()</td>
+	<td>unused</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=listing-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listing-success-msg</td>
+	<td>8000</td>
+</tr>
+
+<!-- 5. View Details & Manage as Owner (Req 4.4 - 4.6) -->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=btn-toggle-sold</td>
+	<td>8000</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>id=btn-edit-listing</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>id=btn-delete-listing</td>
+	<td></td>
+</tr>
+
+<!-- 6. Mark as Sold (Req 4.6) -->
+<tr>
+	<td>click</td>
+	<td>id=btn-toggle-sold</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listing-action-success-msg</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=listing-detail-status</td>
+	<td>sold</td>
+</tr>
+
+<!-- 7. Edit Listing (Req 4.4) -->
+<tr>
+	<td>click</td>
+	<td>id=btn-edit-listing</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=edit-listing-price</td>
+	<td>3000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=edit-listing-price</td>
+	<td>249.99</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=btn-save-edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listing-action-success-msg</td>
+	<td>5000</td>
+</tr>
+
+<!-- 8. Delete Listing (Req 4.5) -->
+<tr>
+	<td>click</td>
+	<td>id=btn-delete-listing</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=btn-confirm-delete</td>
+	<td>3000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=btn-confirm-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listings-search-input</td>
+	<td>5000</td>
+</tr>
+
+<!-- 9. Logout -->
+<tr>
+	<td>click</td>
+	<td>id=nav-btn-logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=login-submit-btn</td>
+	<td>5000</td>
+</tr>
+</tbody></table>
+</body>
+</html>

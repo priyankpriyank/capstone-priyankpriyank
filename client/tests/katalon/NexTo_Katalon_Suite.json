@@ -133,6 +133,52 @@
         { "command": "open", "target": "/listings", "value": "" },
         { "command": "waitForElementPresent", "target": "css=.listing-card", "value": "5000" }
       ]
+    },
+    {
+      "id": "fe-05",
+      "name": "FE-05_Listing_Management_Edit_Sold_Delete",
+      "commands": [
+        { "command": "storeEval", "target": "\"katalon_w6_\" + new Date().getTime() + \"@nexto.com\"", "value": "testEmail" },
+        { "command": "storeEval", "target": "\"Listing Owner \" + new Date().getTime().toString().slice(-4)", "value": "testName" },
+        { "command": "open", "target": "/register", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=fullName", "value": "5000" },
+        { "command": "type", "target": "id=fullName", "value": "${testName}" },
+        { "command": "type", "target": "id=email", "value": "${testEmail}" },
+        { "command": "type", "target": "id=password", "value": "P@ssw0rd1!" },
+        { "command": "click", "target": "id=register-submit-btn", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=register-success-msg", "value": "5000" },
+        { "command": "open", "target": "/login", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=email", "value": "5000" },
+        { "command": "type", "target": "id=email", "value": "${testEmail}" },
+        { "command": "type", "target": "id=password", "value": "P@ssw0rd1!" },
+        { "command": "click", "target": "id=login-submit-btn", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=nav-btn-logout", "value": "5000" },
+        { "command": "open", "target": "/create-listing", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=listing-title-input", "value": "5000" },
+        { "command": "type", "target": "id=listing-title-input", "value": "Bose QuietComfort 45 Headphones" },
+        { "command": "select", "target": "id=listing-category-select", "value": "index=1" },
+        { "command": "type", "target": "id=listing-price-input", "value": "289.00" },
+        { "command": "type", "target": "id=listing-description-input", "value": "Authentic Bose QuietComfort headphones with noise cancelling. Barely used with carrying case." },
+        { "command": "click", "target": "id=listing-submit-btn", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=listing-success-msg", "value": "8000" },
+        { "command": "waitForElementPresent", "target": "id=btn-toggle-sold", "value": "8000" },
+        { "command": "assertElementPresent", "target": "id=btn-edit-listing", "value": "" },
+        { "command": "assertElementPresent", "target": "id=btn-delete-listing", "value": "" },
+        { "command": "click", "target": "id=btn-toggle-sold", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=listing-action-success-msg", "value": "5000" },
+        { "command": "assertText", "target": "id=listing-detail-status", "value": "sold" },
+        { "command": "click", "target": "id=btn-edit-listing", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=edit-listing-price", "value": "3000" },
+        { "command": "type", "target": "id=edit-listing-price", "value": "249.99" },
+        { "command": "click", "target": "id=btn-save-edit", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=listing-action-success-msg", "value": "5000" },
+        { "command": "click", "target": "id=btn-delete-listing", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=btn-confirm-delete", "value": "3000" },
+        { "command": "click", "target": "id=btn-confirm-delete", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=listings-search-input", "value": "5000" },
+        { "command": "click", "target": "id=nav-btn-logout", "value": "" },
+        { "command": "waitForElementPresent", "target": "id=login-submit-btn", "value": "5000" }
+      ]
     }
   ]
 }
