@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 import "./Profile.css";
@@ -28,23 +29,37 @@ function Profile() {
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  // Fetch full profile including listing stats
+  // Week 6: User's Own Listings (Req 2.1, 4.4 - 4.6)
+  const [userListings, setUserListings] = useState([]);
+  const [listingsLoading, setListingsLoading] = useState(false);
+  const [listingMsg, setListingMsg] = useState("");
+
+  // Fetch full profile including listing stats & user listings
   useEffect(() => {
     let isMounted = true;
 
     async function loadProfile() {
       try {
         setLoading(true);
-        const res = await api.get("/profile");
-        if (isMounted && res.data.success) {
-          setProfileData(res.data.profile);
+        setListingsLoading(true);
+        const [profileRes, listingsRes] = await Promise.all([
+          api.get("/profile"),
+          api.get("/listings/user/me")
+        ]);
+
+        if (isMounted && profileRes.data.success) {
+          setProfileData(profileRes.data.profile);
           setInfoForm({
-            fullName: res.data.profile.full_name || "",
-            email: res.data.profile.email || ""
+            fullName: profileRes.data.profile.full_name || "",
+            email: profileRes.data.profile.email || ""
           });
         }
+
+        if (isMounted && listingsRes.data.success) {
+          setUserListings(listingsRes.data.listings || []);
+        }
       } catch (err) {
-        console.error("Failed to load profile:", err);
+        console.error("Failed to load profile or listings:", err);
         if (isMounted && user) {
           setInfoForm({
             fullName: user.full_name || "",
@@ -54,6 +69,7 @@ function Profile() {
       } finally {
         if (isMounted) {
           setLoading(false);
+          setListingsLoading(false);
         }
       }
     }
@@ -65,6 +81,54 @@ function Profile() {
     };
   }, [user]);
 
+  // Week 6: Toggle Status in Profile (Req 4.6)
+  async function handleToggleListingStatus(listingId) {
+    try {
+      const res = await api.patch(`/listings/${listingId}/sold`);
+      if (res.data.success) {
+        const newStatus = res.data.listing.status;
+        setUserListings((prev) =>
+          prev.map((item) =>
+            item.listing_id === listingId ? { ...item, status: newStatus } : item
+          )
+        );
+        // Update stats counter
+        setProfileData((prev) => {
+          if (!prev?.stats) return prev;
+          const activeChange = newStatus === "active" ? 1 : -1;
+          const soldChange = newStatus === "sold" ? 1 : -1;
+          return {
+            ...prev,
+            stats: {
+              ...prev.stats,
+              active_listings: Math.max(0, prev.stats.active_listings + activeChange),
+              sold_listings: Math.max(0, prev.stats.sold_listings + soldChange)
+            }
+          };
+        });
+        setListingMsg(`✓ Listing marked as ${newStatus.toUpperCase()}`);
+        setTimeout(() => setListingMsg(""), 3500);
+      }
+    } catch (err) {
+      console.error("Failed to toggle listing status:", err);
+    }
+  }
+
+  // Week 6: Delete Listing in Profile (Req 4.5)
+  async function handleDeleteListing(listingId) {
+    if (!window.confirm("Are you sure you want to delete this listing?")) return;
+    try {
+      const res = await api.delete(`/listings/${listingId}`);
+      if (res.data.success) {
+        setUserListings((prev) => prev.filter((item) => item.listing_id !== listingId));
+        setListingMsg("✓ Listing deleted successfully");
+        setTimeout(() => setListingMsg(""), 3500);
+      }
+    } catch (err) {
+      console.error("Failed to delete listing:", err);
+    }
+  }
+
   // Handle Profile Info Submit (Req 2.2)
   async function handleInfoSubmit(e) {
     e.preventDefault();
@@ -72,10 +136,14 @@ function Profile() {
     setInfoError("");
     setInfoLoading(true);
 
+    const form = new FormData(e.currentTarget);
+    const fullName = form.get("fullName") || infoForm.fullName;
+    const email = form.get("email") || infoForm.email;
+
     try {
       const res = await api.put("/profile", {
-        fullName: infoForm.fullName,
-        email: infoForm.email
+        fullName,
+        email
       });
 
       if (res.data.success) {
@@ -106,22 +174,27 @@ function Profile() {
     setPasswordSuccess("");
     setPasswordError("");
 
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+    const form = new FormData(e.currentTarget);
+    const currentPassword = form.get("currentPassword") || passwordForm.currentPassword;
+    const newPassword = form.get("newPassword") || passwordForm.newPassword;
+    const confirmPassword = form.get("confirmPassword") || passwordForm.confirmPassword;
+
+    if (newPassword !== confirmPassword) {
       setPasswordError("New passwords do not match.");
       return;
     }
 
-    if (passwordForm.newPassword.length <= 8) {
+    if (newPassword.length <= 8) {
       setPasswordError("Password must be longer than 8 characters.");
       return;
     }
 
-    if (!/[A-Z]/.test(passwordForm.newPassword)) {
+    if (!/[A-Z]/.test(newPassword)) {
       setPasswordError("Password must contain at least one uppercase letter.");
       return;
     }
 
-    if (!/[!@#$%^&*(),.?":{}|<>_\-\\[\]';+/=~`]/.test(passwordForm.newPassword)) {
+    if (!/[!@#$%^&*(),.?":{}|<>_\-\\[\]';+/=~`]/.test(newPassword)) {
       setPasswordError("Password must contain at least one special character.");
       return;
     }
@@ -130,9 +203,9 @@ function Profile() {
 
     try {
       const res = await api.put("/profile/change-password", {
-        currentPassword: passwordForm.currentPassword,
-        newPassword: passwordForm.newPassword,
-        confirmPassword: passwordForm.confirmPassword
+        currentPassword,
+        newPassword,
+        confirmPassword
       });
 
       if (res.data.success) {
@@ -162,10 +235,10 @@ function Profile() {
   const displayStatus = profileData?.account_status || user?.account_status || "active";
   const memberSince = profileData?.created_at
     ? new Date(profileData.created_at).toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-      })
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    })
     : "Recently";
 
   const initials = displayName
@@ -214,11 +287,10 @@ function Profile() {
             <div className="profile-badges-row">
               <span className="badge badge-role">{displayRole}</span>
               <span
-                className={`badge ${
-                  displayStatus === "active"
+                className={`badge ${displayStatus === "active"
                     ? "badge-status-active"
                     : "badge-status-deactivated"
-                }`}
+                  }`}
               >
                 {displayStatus}
               </span>
@@ -453,6 +525,89 @@ function Profile() {
                 {passwordLoading ? "Updating Password..." : "Update Password"}
               </button>
             </form>
+          </section>
+
+          {/* Section 3: My Published Listings (Req 2.1, 4.4 - 4.6) */}
+          <section className="profile-panel-card" id="profile-my-listings-section">
+            <div className="panel-card-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+              <div>
+                <h2 className="panel-card-title">My Marketplace Listings</h2>
+                <p className="panel-card-subtitle">
+                  Manage your items for sale, update pricing, or mark items as sold.
+                </p>
+              </div>
+              <Link to="/create-listing" className="profile-btn-primary" style={{ padding: "8px 16px", fontSize: "13.5px" }}>
+                + Post New Item
+              </Link>
+            </div>
+
+            {listingMsg && (
+              <div className="alert-banner alert-success" role="alert" style={{ marginBottom: "16px" }}>
+                {listingMsg}
+              </div>
+            )}
+
+            {listingsLoading ? (
+              <p>Loading your listings...</p>
+            ) : userListings.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "32px 16px", color: "var(--text-muted)" }}>
+                <p style={{ margin: "0 0 12px" }}>You have not posted any marketplace listings yet.</p>
+                <Link to="/create-listing" className="profile-btn-primary">
+                  Create Your First Listing
+                </Link>
+              </div>
+            ) : (
+              <div className="user-listings-list">
+                {userListings.map((item) => (
+                  <div key={item.listing_id} className="user-listing-item-card">
+                    <div className="item-thumb-box">
+                      {item.primary_photo ? (
+                        <img
+                          src={item.primary_photo.startsWith("http") ? item.primary_photo : `http://localhost:5000${item.primary_photo}`}
+                          alt={item.title}
+                          className="item-thumb-img"
+                        />
+                      ) : (
+                        <span>📷</span>
+                      )}
+                    </div>
+                    <div className="item-details-box">
+                      <div className="item-top-info">
+                        <span className={`status-chip ${item.status === "active" ? "status-active" : "status-sold"}`}>
+                          {item.status}
+                        </span>
+                        <span className="category-chip" style={{ fontSize: "11px", padding: "2px 8px" }}>
+                          {item.category_name}
+                        </span>
+                      </div>
+                      <h4 className="item-title">{item.title}</h4>
+                      <p className="item-price">${Number(item.price).toFixed(2)}</p>
+                    </div>
+                    <div className="item-actions-box">
+                      <Link to={`/listings/${item.listing_id}`} className="btn-secondary" style={{ padding: "7px 12px", fontSize: "12.5px" }}>
+                        View
+                      </Link>
+                      <button
+                        type="button"
+                        className={`btn-toolbar ${item.status === "active" ? "btn-mark-sold" : "btn-mark-active"}`}
+                        style={{ padding: "7px 12px", fontSize: "12.5px" }}
+                        onClick={() => handleToggleListingStatus(item.listing_id)}
+                      >
+                        {item.status === "active" ? "Mark Sold" : "Mark Active"}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-toolbar btn-delete"
+                        style={{ padding: "7px 12px", fontSize: "12.5px" }}
+                        onClick={() => handleDeleteListing(item.listing_id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         </main>
       </div>
