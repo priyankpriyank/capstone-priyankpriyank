@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+<title>FE-02_Profile_Management</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" data-tags="">FE-02: User Profile Management Flow (Req 2.1 - 2.2, Mockup 6)</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>/register<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=fullName<datalist></datalist></td><td>5000</td></tr>
+<tr><td>storeEval</td><td>"profile_" + new Date().getTime() + "@nexto.com"<datalist></datalist></td><td>profileEmail</td></tr>
+<tr><td>type</td><td>id=fullName<datalist></datalist></td><td>Initial Profile Name</td></tr>
+<tr><td>type</td><td>id=email<datalist></datalist></td><td>${profileEmail}</td></tr>
+<tr><td>type</td><td>id=password<datalist></datalist></td><td>P@ssw0rd1!</td></tr>
+<tr><td>click</td><td>id=register-submit-btn<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=register-success-msg<datalist></datalist></td><td>5000</td></tr>
+<tr><td>pause</td><td>1500<datalist></datalist></td><td></td></tr>
+<tr><td>open</td><td>/login<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=email<datalist></datalist></td><td>5000</td></tr>
+<tr><td>type</td><td>id=email<datalist></datalist></td><td>${profileEmail}</td></tr>
+<tr><td>type</td><td>id=password<datalist></datalist></td><td>P@ssw0rd1!</td></tr>
+<tr><td>click</td><td>id=login-submit-btn<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=nav-link-profile<datalist></datalist></td><td>5000</td></tr>
+<tr><td>click</td><td>id=nav-link-profile<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=profile-avatar-circle<datalist></datalist></td><td>5000</td></tr>
+<tr><td>assertElementPresent</td><td>id=profile-avatar-circle<datalist></datalist></td><td></td></tr>
+<tr><td>assertElementPresent</td><td>id=profile-stat-active<datalist></datalist></td><td></td></tr>
+<tr><td>assertElementPresent</td><td>id=profile-stat-sold<datalist></datalist></td><td></td></tr>
+<tr><td>type</td><td>id=profile-fullName-input<datalist></datalist></td><td>Updated Katalon Name</td></tr>
+<tr><td>click</td><td>id=profile-save-info-btn<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=profile-info-success<datalist></datalist></td><td>5000</td></tr>
+<tr><td>assertText</td><td>id=profile-info-success<datalist></datalist></td><td>✓ Profile updated successfully</td></tr>
+<tr><td>click</td><td>id=nav-btn-logout<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=login-submit-btn<datalist></datalist></td><td>5000</td></tr>
+</tbody></table>
+</body>
+</html>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import api from "../services/api";
+import api, { getImageUrl } from "../services/api";
 import "./Profile.css";
 
 function Profile() {
@@ -563,7 +563,7 @@ function Profile() {
                     <div className="item-thumb-box">
                       {item.primary_photo ? (
                         <img
-                          src={item.primary_photo.startsWith("http") ? item.primary_photo : `http://localhost:5000${item.primary_photo}`}
+                          src={getImageUrl(item.primary_photo)}
                           alt={item.title}
                           className="item-thumb-img"
                         />

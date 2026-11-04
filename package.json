@@ -19,6 +19,8 @@
     "doc": "docs"
   },
   "scripts": {
+    "start": "concurrently -n \"SERVER,CLIENT\" -c \"blue,magenta\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:all": "concurrently -n \"SERVER,CLIENT\" -c \"blue,magenta\" \"npm run dev:server\" \"npm run dev:client\"",
     "dev": "npm --prefix client run dev",
     "dev:client": "npm --prefix client run dev",
     "dev:server": "npm --prefix server run dev",
@@ -31,6 +33,7 @@
     "react-router-dom": "^7.18.3"
   },
   "devDependencies": {
+    "concurrently": "^10.0.6",
     "newman": "^6.2.3"
   }
 }

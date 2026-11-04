@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import api from "../services/api";
+import api, { getImageUrl } from "../services/api";
 import "./Home.css";
 
 function Home() {
@@ -47,12 +47,6 @@ function Home() {
     loadFeatured();
   }, []);
 
-  function getImageUrl(path) {
-    if (!path) return "";
-    if (path.startsWith("http")) return path;
-    return `http://localhost:5000${path}`;
-  }
-
   const categoriesPreview = [
     { name: "Electronics", icon: "💻", count: "120+ items" },
     { name: "Vehicles", icon: "🚗", count: "45+ items" },
@@ -64,17 +58,14 @@ function Home() {
 
   return (
     <div className="home-container">
-      {/* Universal Heading for Katalon Test Assertions */}
-      <h1 id="home-welcome-title" style={{ display: "none" }}>
-        Welcome to NexTo
-      </h1>
-
       {user ? (
         /* Logged-In User Dashboard (Desktop Mockup 4) */
         <div className="dashboard-wrapper">
           <header className="dashboard-welcome-header">
             <div>
-              <h1 className="dashboard-title">Dashboard Overview</h1>
+              <h1 id="home-welcome-title" className="dashboard-title">
+                Welcome to NexTo
+              </h1>
               <p id="home-user-greeting" className="dashboard-subtitle">
                 Welcome back, <strong>{user.full_name}</strong>! Here is an overview of your marketplace activity.
               </p>
@@ -230,8 +221,8 @@ function Home() {
               <span className="hero-badge-dot" />
               Trusted Peer-to-Peer E-Commerce
             </div>
-            <h1 className="hero-title">
-              Buy, Sell &amp; Connect Locally on <span className="hero-gradient-text">NexTo</span>
+            <h1 id="home-welcome-title" className="hero-title">
+              Welcome to <span className="hero-gradient-text">NexTo</span>
             </h1>
             <p className="hero-subtitle">
               The high-speed community marketplace. Discover deals nearby on electronics, clothing, vehicles, and furniture with zero commission fees.

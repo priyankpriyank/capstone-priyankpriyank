@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+<title>FE-04_Create_Listing_And_View_Details</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" data-tags="">FE-04: Create Listing &amp; View Details Flow (Req 4.1 - 4.3, 3.2.1, Mockup 2)</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>/login<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=email<datalist></datalist></td><td>5000</td></tr>
+<tr><td>storeEval</td><td>"seller_" + new Date().getTime() + "@nexto.com"<datalist></datalist></td><td>sellerEmail</td></tr>
+<tr><td>open</td><td>/register<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=fullName<datalist></datalist></td><td>5000</td></tr>
+<tr><td>type</td><td>id=fullName<datalist></datalist></td><td>Listing Seller User</td></tr>
+<tr><td>type</td><td>id=email<datalist></datalist></td><td>${sellerEmail}</td></tr>
+<tr><td>type</td><td>id=password<datalist></datalist></td><td>P@ssw0rd1!</td></tr>
+<tr><td>click</td><td>id=register-submit-btn<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=register-success-msg<datalist></datalist></td><td>5000</td></tr>
+<tr><td>pause</td><td>1500<datalist></datalist></td><td></td></tr>
+<tr><td>open</td><td>/login<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=email<datalist></datalist></td><td>5000</td></tr>
+<tr><td>type</td><td>id=email<datalist></datalist></td><td>${sellerEmail}</td></tr>
+<tr><td>type</td><td>id=password<datalist></datalist></td><td>P@ssw0rd1!</td></tr>
+<tr><td>click</td><td>id=login-submit-btn<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=nav-link-create-listing<datalist></datalist></td><td>5000</td></tr>
+<tr><td>click</td><td>id=nav-link-create-listing<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>id=listing-title-input<datalist></datalist></td><td>5000</td></tr>
+<tr><td>type</td><td>id=listing-title-input<datalist></datalist></td><td>Apple MacBook Pro 14 M1</td></tr>
+<tr><td>select</td><td>id=listing-category-select<datalist></datalist></td><td>label=Electronics</td></tr>
+<tr><td>type</td><td>id=listing-price-input<datalist></datalist></td><td>1499</td></tr>
+<tr><td>type</td><td>id=listing-description-input<datalist></datalist></td><td>Apple MacBook Pro 14-inch space grey, 16GB unified memory, 512GB SSD. Flawless condition.</td></tr>
+<tr><td>click</td><td>id=listing-submit-btn<datalist></datalist></td><td></td></tr>
+<tr><td>pause</td><td>2000<datalist></datalist></td><td></td></tr>
+<tr><td>open</td><td>/listings<datalist></datalist></td><td></td></tr>
+<tr><td>waitForElementPresent</td><td>css=.listing-card<datalist></datalist></td><td>5000</td></tr>
+</tbody></table>
+</body>
+</html>
