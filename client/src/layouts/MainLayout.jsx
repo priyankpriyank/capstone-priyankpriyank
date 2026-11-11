@@ -74,6 +74,17 @@ function MainLayout() {
                   Messages
                 </NavLink>
 
+                {(user.role || "").toLowerCase() === "admin" && (
+                  <NavLink
+                    id="nav-link-admin"
+                    to="/admin"
+                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    🛡️ Admin
+                  </NavLink>
+                )}
+
                 <NavLink
                   id="nav-link-profile"
                   to="/profile"
