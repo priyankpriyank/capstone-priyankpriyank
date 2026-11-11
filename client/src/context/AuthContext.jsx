@@ -20,6 +20,7 @@ export function AuthProvider({ children }) {
       setUser(response.data.user);
     } catch (error) {
       setUser(null);
+      localStorage.removeItem("nexto_token");
     } finally {
       setLoading(false);
     }
@@ -33,6 +34,10 @@ export function AuthProvider({ children }) {
         email,
         password
       });
+
+      if (response.data.token) {
+        localStorage.setItem("nexto_token", response.data.token);
+      }
 
       setUser(response.data.user);
 
@@ -56,6 +61,7 @@ export function AuthProvider({ children }) {
     try {
       await api.post("/auth/logout");
     } finally {
+      localStorage.removeItem("nexto_token");
       setUser(null);
     }
   }

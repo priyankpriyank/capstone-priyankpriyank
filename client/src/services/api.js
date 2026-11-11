@@ -8,6 +8,15 @@ const api = axios.create({
   withCredentials: true
 });
 
+// Attach Bearer token from localStorage for seamless cross-domain authentication
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("nexto_token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export function getImageUrl(path) {
   if (!path) return "";
   if (path.startsWith("http://") || path.startsWith("https://")) {
