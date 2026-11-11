@@ -30,6 +30,26 @@
       "key": "categoryId",
       "value": "1",
       "type": "string"
+    },
+    {
+      "key": "buyerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "buyerEmail",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "msgListingId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "threadId",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -582,6 +602,305 @@
           "raw": "{{baseUrl}}/api/listings/{{listingId}}",
           "host": ["{{baseUrl}}"],
           "path": ["api", "listings", "{{listingId}}"]
+        }
+      }
+    },
+    {
+      "name": "17. Listings - Create Item For Messaging (Seller)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Stores msgListingId', function () {",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.collectionVariables.set('msgListingId', String(jsonData.listing.listing_id));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "title", "value": "Nintendo Switch Console for Messaging Test", "type": "text" },
+            { "key": "description", "value": "Complete with cables and dock.", "type": "text" },
+            { "key": "price", "value": "299.00", "type": "text" },
+            { "key": "categoryId", "value": "{{categoryId}}", "type": "text" },
+            { "key": "photoUrls", "value": "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/listings",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "listings"]
+        }
+      }
+    },
+    {
+      "name": "18. Auth - Register Buyer User (Req 1.1)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timestamp = Date.now() + 100;",
+              "const email = `buyer_${timestamp}@nexto.com`;",
+              "pm.collectionVariables.set('buyerEmail', email);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Newman Buyer User\",\n  \"email\": \"{{buyerEmail}}\",\n  \"password\": \"P@ssw0rd1!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "register"]
+        }
+      }
+    },
+    {
+      "name": "19. Auth - Login Buyer User (Req 1.2)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Stores buyerToken', function () {",
+              "    pm.expect(jsonData.token).to.be.ok;",
+              "    pm.collectionVariables.set('buyerToken', jsonData.token);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{buyerEmail}}\",\n  \"password\": \"P@ssw0rd1!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "20. Messages - Send Message on Listing (Req 5.1, 5.5)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Thread created and threadId stored', function () {",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.threadId).to.be.ok;",
+              "    pm.collectionVariables.set('threadId', String(jsonData.threadId));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"listingId\": {{msgListingId}},\n  \"content\": \"Hi! Is this Nintendo Switch still available for pickup?\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/messages",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "messages"]
+        }
+      }
+    },
+    {
+      "name": "21. Messages - Thread Reuse Check (Req 5.2)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Reuses existing thread ID', function () {",
+              "    const expectedThreadId = pm.collectionVariables.get('threadId');",
+              "    pm.expect(String(jsonData.threadId)).to.equal(String(expectedThreadId));",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"listingId\": {{msgListingId}},\n  \"content\": \"Would you accept $280 cash?\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/messages",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "messages"]
+        }
+      }
+    },
+    {
+      "name": "22. Messages - View Inbox (Req 5.3)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Returns threads list with active thread', function () {",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.threads).to.be.an('array');",
+              "    pm.expect(jsonData.threads.length).to.be.greaterThan(0);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/messages/inbox",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "messages", "inbox"]
+        }
+      }
+    },
+    {
+      "name": "23. Messages - Open Thread Details (Req 5.4)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Returns thread messages list', function () {",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.messages).to.be.an('array');",
+              "    pm.expect(jsonData.messages.length).to.equal(2);",
+              "    pm.expect(jsonData.messages[0].text).to.include('available');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/messages/threads/{{threadId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "messages", "threads", "{{threadId}}"]
+        }
+      }
+    },
+    {
+      "name": "24. Messages - Reply to Thread as Seller (Req 5.4, 5.5)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Reply added to thread', function () {",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.messageRecord.content).to.equal('Yes, $280 works for me!');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"content\": \"Yes, $280 works for me!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/messages/threads/{{threadId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "messages", "threads", "{{threadId}}"]
         }
       }
     }

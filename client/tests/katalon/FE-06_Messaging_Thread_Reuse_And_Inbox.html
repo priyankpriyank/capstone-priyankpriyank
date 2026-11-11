@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://seleniumhq.org/profile/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>FE-06: User-to-User Messaging &amp; Inbox Flow (Req 5.1 - 5.5, Week 7)</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">FE-06: User-to-User Messaging &amp; Inbox Flow (Req 5.1 - 5.5, Week 7)</td></tr>
+</thead><tbody>
+<!-- 1. Generate Seller dynamic credentials -->
+<tr>
+	<td>storeEval</td>
+	<td>&quot;seller_w7_&quot; + new Date().getTime() + &quot;@nexto.com&quot;</td>
+	<td>sellerEmail</td>
+</tr>
+<tr>
+	<td>storeEval</td>
+	<td>&quot;Seller &quot; + new Date().getTime().toString().slice(-4)</td>
+	<td>sellerName</td>
+</tr>
+
+<!-- 2. Register Seller -->
+<tr>
+	<td>open</td>
+	<td>/register</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=fullName</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=fullName</td>
+	<td>${sellerName}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${sellerEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=register-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=register-success-msg</td>
+	<td>5000</td>
+</tr>
+
+<!-- 3. Sign In as Seller -->
+<tr>
+	<td>open</td>
+	<td>/login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=email</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${sellerEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=login-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=nav-btn-logout</td>
+	<td>5000</td>
+</tr>
+
+<!-- 4. Seller Creates Listing to Negotiate -->
+<tr>
+	<td>open</td>
+	<td>/create-listing</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listing-title-input</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=listing-title-input</td>
+	<td>Nintendo Switch OLED White</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=listing-category-select</td>
+	<td>index=1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=listing-price-input</td>
+	<td>350.00</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=listing-description-input</td>
+	<td>Mint condition Nintendo Switch OLED console with box and cables.</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=listing-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listing-success-msg</td>
+	<td>8000</td>
+</tr>
+
+<!-- 5. Logout Seller -->
+<tr>
+	<td>click</td>
+	<td>id=nav-btn-logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=login-submit-btn</td>
+	<td>5000</td>
+</tr>
+
+<!-- 6. Generate Buyer dynamic credentials -->
+<tr>
+	<td>storeEval</td>
+	<td>&quot;buyer_w7_&quot; + new Date().getTime() + &quot;@nexto.com&quot;</td>
+	<td>buyerEmail</td>
+</tr>
+<tr>
+	<td>storeEval</td>
+	<td>&quot;Buyer &quot; + new Date().getTime().toString().slice(-4)</td>
+	<td>buyerName</td>
+</tr>
+
+<!-- 7. Register Buyer -->
+<tr>
+	<td>open</td>
+	<td>/register</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=fullName</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=fullName</td>
+	<td>${buyerName}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${buyerEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=register-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=register-success-msg</td>
+	<td>5000</td>
+</tr>
+
+<!-- 8. Sign In as Buyer -->
+<tr>
+	<td>open</td>
+	<td>/login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=email</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${buyerEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=login-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=nav-btn-logout</td>
+	<td>5000</td>
+</tr>
+
+<!-- 9. Buyer Navigates to Listings & Opens Details (Req 5.1) -->
+<tr>
+	<td>open</td>
+	<td>/listings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>css=.listing-card</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.listing-card</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=btn-open-contact-box</td>
+	<td>5000</td>
+</tr>
+
+<!-- 10. Buyer Sends Message from Details Page (Req 5.1) -->
+<tr>
+	<td>click</td>
+	<td>id=btn-open-contact-box</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=contact-seller-input</td>
+	<td>3000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=contact-seller-input</td>
+	<td>Hi! Is this Nintendo Switch still available for pickup?</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=contact-seller-submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=contact-seller-success</td>
+	<td>5000</td>
+</tr>
+
+<!-- 11. Wait for redirect to Inbox Thread View (Req 5.3, 5.4) -->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=chat-messages-container</td>
+	<td>6000</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>id=active-thread-title</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>id=chat-message-input</td>
+	<td></td>
+</tr>
+
+<!-- 12. Buyer Sends Second Message (Tests Thread Reuse - Req 5.2) -->
+<tr>
+	<td>type</td>
+	<td>id=chat-message-input</td>
+	<td>Would you accept $320 cash today?</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=chat-send-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+
+<!-- 13. Buyer Checks Messages Page directly (Req 5.3) -->
+<tr>
+	<td>open</td>
+	<td>/messages</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=inbox-threads-list</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>css=.thread-item</td>
+	<td></td>
+</tr>
+
+<!-- 14. Buyer Logs Out -->
+<tr>
+	<td>click</td>
+	<td>id=nav-btn-logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=login-submit-btn</td>
+	<td>5000</td>
+</tr>
+
+<!-- 15. Seller Logs In & Checks Incoming Message (Req 5.3, 5.4) -->
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${sellerEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=login-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=home-welcome-title</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/messages</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=inbox-threads-list</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=chat-messages-container</td>
+	<td>5000</td>
+</tr>
+
+<!-- 16. Seller Replies to Buyer (Req 5.4, 5.5) -->
+<tr>
+	<td>type</td>
+	<td>id=chat-message-input</td>
+	<td>Yes! $320 works. Meet me at Mohawk College campus.</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=chat-send-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+
+<!-- 17. Seller Logs Out -->
+<tr>
+	<td>click</td>
+	<td>id=nav-btn-logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=login-submit-btn</td>
+	<td>5000</td>
+</tr>
+</tbody></table>
+</body>
+</html>
