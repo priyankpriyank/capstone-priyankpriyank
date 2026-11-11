@@ -10,7 +10,16 @@ import api from "../services/api";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  // Initialize user synchronously from localStorage to prevent flash of unauthenticated state on page reload
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("nexto_user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [loading, setLoading] = useState(true);
 
   async function checkAuth() {
@@ -18,8 +27,10 @@ export function AuthProvider({ children }) {
       const response = await api.get("/auth/me");
 
       setUser(response.data.user);
+      localStorage.setItem("nexto_user", JSON.stringify(response.data.user));
     } catch (error) {
       setUser(null);
+      localStorage.removeItem("nexto_user");
       localStorage.removeItem("nexto_token");
     } finally {
       setLoading(false);
@@ -39,7 +50,10 @@ export function AuthProvider({ children }) {
         localStorage.setItem("nexto_token", response.data.token);
       }
 
-      setUser(response.data.user);
+      if (response.data.user) {
+        setUser(response.data.user);
+        localStorage.setItem("nexto_user", JSON.stringify(response.data.user));
+      }
 
       return {
         success: true,
@@ -62,12 +76,17 @@ export function AuthProvider({ children }) {
       await api.post("/auth/logout");
     } finally {
       localStorage.removeItem("nexto_token");
+      localStorage.removeItem("nexto_user");
       setUser(null);
     }
   }
 
   function updateUser(updatedData) {
-    setUser((prev) => (prev ? { ...prev, ...updatedData } : updatedData));
+    setUser((prev) => {
+      const updated = prev ? { ...prev, ...updatedData } : updatedData;
+      localStorage.setItem("nexto_user", JSON.stringify(updated));
+      return updated;
+    });
   }
 
   useEffect(() => {
