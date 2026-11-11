@@ -30,3 +30,4 @@ router.post("/threads/:threadId", replyToThread);
 router.get("/listing/:listingId", getThreadForListing);
 
 module.exports = router;
+
