@@ -10,6 +10,7 @@ const profileRoutes = require("./routes/profile.routes");
 const categoryRoutes = require("./routes/category.routes");
 const listingRoutes = require("./routes/listing.routes");
 const messageRoutes = require("./routes/message.routes");
+const adminRoutes = require("./routes/admin.routes");
 
 const app = express();
 
@@ -75,5 +76,6 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/listings", listingRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/admin", adminRoutes);
 
 module.exports = app;

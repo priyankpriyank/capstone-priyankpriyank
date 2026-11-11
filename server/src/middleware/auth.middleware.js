@@ -35,6 +35,17 @@ function authenticateToken(req, res, next) {
   }
 }
 
+function authorizeAdmin(req, res, next) {
+  if (!req.user || (req.user.role || "").toLowerCase() !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Admin privileges required"
+    });
+  }
+  next();
+}
+
 module.exports = {
-  authenticateToken
+  authenticateToken,
+  authorizeAdmin
 };
