@@ -28,6 +28,44 @@ function ListingDetails() {
   const [actionSuccess, setActionSuccess] = useState("");
   const [actionError, setActionError] = useState("");
 
+  // Week 7: Direct Messaging to Seller (Req 5.1)
+  const [showContactBox, setShowContactBox] = useState(false);
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactLoading, setContactLoading] = useState(false);
+  const [contactSuccess, setContactSuccess] = useState("");
+  const [contactError, setContactError] = useState("");
+
+  async function handleSendDirectMessage(e) {
+    e.preventDefault();
+    if (!contactMessage.trim() || contactLoading) return;
+
+    setContactLoading(true);
+    setContactError("");
+    setContactSuccess("");
+
+    try {
+      const res = await api.post("/messages", {
+        listingId: listing.listing_id,
+        content: contactMessage.trim()
+      });
+
+      if (res.data.success) {
+        setContactSuccess("✓ Message sent to seller! Redirecting to conversation...");
+        setContactMessage("");
+        setTimeout(() => {
+          navigate(`/messages?threadId=${res.data.threadId}`);
+        }, 1200);
+      }
+    } catch (err) {
+      console.error("Direct message error:", err);
+      setContactError(
+        err.response?.data?.message || "Unable to send message to seller. Please try again."
+      );
+    } finally {
+      setContactLoading(false);
+    }
+  }
+
   useEffect(() => {
     async function fetchListing() {
       try {
@@ -446,16 +484,98 @@ function ListingDetails() {
             </div>
           </div>
 
-          {/* Contact / Message Seller Button */}
+          {/* Contact / Message Seller Button (Req 5.1) */}
           {!isOwner && (
             <div className="details-actions-container">
-              <Link
-                to={user ? `/messages?listingId=${listing.listing_id}` : "/login"}
-                id="listing-contact-btn"
-                className="details-action-btn"
-              >
-                💬 {user ? "Message Seller" : "Sign in to Message Seller"}
-              </Link>
+              {user ? (
+                !showContactBox ? (
+                  <div style={{ display: "flex", gap: "10px", width: "100%", flexWrap: "wrap" }}>
+                    <button
+                      id="btn-open-contact-box"
+                      type="button"
+                      className="details-action-btn"
+                      style={{ flex: "1 1 200px" }}
+                      onClick={() => setShowContactBox(true)}
+                    >
+                      💬 Send Message to Seller
+                    </button>
+                    <Link
+                      to={`/messages?listingId=${listing.listing_id}`}
+                      id="listing-contact-btn"
+                      className="details-action-btn"
+                      style={{
+                        background: "var(--bg-subtle)",
+                        color: "var(--text-main)",
+                        border: "1.5px solid var(--border-color)",
+                        width: "auto",
+                        padding: "12px 18px",
+                        textDecoration: "none",
+                        display: "flex",
+                        alignItems: "center"
+                      }}
+                      title="Open full conversation in inbox"
+                    >
+                      Open Chat →
+                    </Link>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSendDirectMessage} className="contact-seller-inline-form" style={{ width: "100%" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                      <strong style={{ fontSize: "14.5px" }}>Direct Message to {listing.seller_name}:</strong>
+                      <button
+                        type="button"
+                        onClick={() => setShowContactBox(false)}
+                        style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "13px" }}
+                      >
+                        ✕ Cancel
+                      </button>
+                    </div>
+
+                    {contactSuccess && (
+                      <div id="contact-seller-success" className="auth-alert-banner auth-alert-success" style={{ marginBottom: "10px" }}>
+                        {contactSuccess}
+                      </div>
+                    )}
+
+                    {contactError && (
+                      <div id="contact-seller-error" className="auth-alert-banner auth-alert-error" style={{ marginBottom: "10px" }}>
+                        ⚠️ {contactError}
+                      </div>
+                    )}
+
+                    <textarea
+                      id="contact-seller-input"
+                      rows="3"
+                      className="auth-input"
+                      style={{ width: "100%", resize: "vertical", marginBottom: "10px" }}
+                      placeholder="Hi! Is this item still available? Can we arrange pickup?"
+                      value={contactMessage}
+                      onChange={(e) => setContactMessage(e.target.value)}
+                      required
+                    />
+
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <button
+                        id="contact-seller-submit"
+                        type="submit"
+                        className="details-action-btn"
+                        disabled={contactLoading || !contactMessage.trim()}
+                        style={{ flex: 1 }}
+                      >
+                        {contactLoading ? "Sending..." : "Send Message"}
+                      </button>
+                    </div>
+                  </form>
+                )
+              ) : (
+                <Link
+                  to="/login"
+                  id="listing-contact-btn"
+                  className="details-action-btn"
+                >
+                  💬 Sign in to Message Seller
+                </Link>
+              )}
             </div>
           )}
 

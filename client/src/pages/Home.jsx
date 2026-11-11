@@ -11,6 +11,7 @@ function Home() {
     sold_listings: 0,
     total_listings: 0
   });
+  const [inboxCount, setInboxCount] = useState(0);
   const [featuredListings, setFeaturedListings] = useState([]);
   const [loadingListings, setLoadingListings] = useState(false);
 
@@ -18,9 +19,17 @@ function Home() {
     async function fetchStats() {
       if (user) {
         try {
-          const res = await api.get("/profile");
-          if (res.data.success && res.data.profile?.stats) {
-            setStats(res.data.profile.stats);
+          const [profRes, inboxRes] = await Promise.allSettled([
+            api.get("/profile"),
+            api.get("/messages/inbox")
+          ]);
+
+          if (profRes.status === "fulfilled" && profRes.value.data.success && profRes.value.data.profile?.stats) {
+            setStats(profRes.value.data.profile.stats);
+          }
+
+          if (inboxRes.status === "fulfilled" && inboxRes.value.data.success) {
+            setInboxCount((inboxRes.value.data.threads || []).length);
           }
         } catch (err) {
           console.error("Failed to fetch dashboard stats:", err);
@@ -85,13 +94,13 @@ function Home() {
               </div>
             </div>
 
-            <div className="metric-card">
+            <Link to="/messages" className="metric-card" style={{ textDecoration: "none", color: "inherit" }}>
               <div className="metric-icon-box icon-purple">💬</div>
               <div className="metric-details">
-                <p className="metric-number">0</p>
-                <p className="metric-label">Unread Messages</p>
+                <p id="dashboard-inbox-count" className="metric-number">{inboxCount}</p>
+                <p className="metric-label">Conversations</p>
               </div>
-            </div>
+            </Link>
 
             <div className="metric-card">
               <div className="metric-icon-box icon-green">🏷️</div>
