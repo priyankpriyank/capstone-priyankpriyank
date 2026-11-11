@@ -122,6 +122,12 @@
 	<td>id=listing-description-input</td>
 	<td>Mint condition Nintendo Switch OLED console with box and cables.</td>
 </tr>
+<!-- Attach sample photo data for test (Req 4.1.2) -->
+<tr>
+	<td>storeEval</td>
+	<td>(function() { var dt = new DataTransfer(); var f = new File(['dummy content'], 'switch-oled.jpg', { type: 'image/jpeg' }); dt.items.add(f); var inp = document.getElementById('listing-photos-input'); inp.files = dt.files; inp.dispatchEvent(new Event('change', { bubbles: true })); return true; })()</td>
+	<td>unused</td>
+</tr>
 <tr>
 	<td>click</td>
 	<td>id=listing-submit-btn</td>

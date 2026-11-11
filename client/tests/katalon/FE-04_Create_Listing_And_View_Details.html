@@ -131,11 +131,22 @@
 	<td>id=listing-description-input</td>
 	<td>Apple MacBook Pro 14-inch space grey, 16GB unified memory, 512GB SSD. Flawless condition.</td>
 </tr>
+<!-- Attach sample photo data for test (Req 4.1.2) -->
+<tr>
+	<td>storeEval</td>
+	<td>(function() { var dt = new DataTransfer(); var f = new File(['dummy content'], 'macbook-pro.jpg', { type: 'image/jpeg' }); dt.items.add(f); var inp = document.getElementById('listing-photos-input'); inp.files = dt.files; inp.dispatchEvent(new Event('change', { bubbles: true })); return true; })()</td>
+	<td>unused</td>
+</tr>
 <!-- 5. Submit Listing Form -->
 <tr>
 	<td>click</td>
 	<td>id=listing-submit-btn</td>
 	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listing-success-msg</td>
+	<td>8000</td>
 </tr>
 <tr>
 	<td>pause</td>
