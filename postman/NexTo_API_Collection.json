@@ -96,7 +96,10 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -104,8 +107,14 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/auth/register",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "register"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
         }
       }
     },
@@ -131,7 +140,10 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -139,8 +151,14 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/auth/register",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "register"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
         }
       }
     },
@@ -168,7 +186,10 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -176,8 +197,14 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/auth/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "login"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
         }
       }
     },
@@ -199,7 +226,10 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -207,8 +237,14 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/auth/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "login"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
         }
       }
     },
@@ -235,12 +271,21 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/auth/me",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "me"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "me"
+          ]
         }
       }
     },
@@ -267,12 +312,20 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/profile",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "profile"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "profile"
+          ]
         }
       }
     },
@@ -298,8 +351,14 @@
       "request": {
         "method": "PUT",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -307,8 +366,13 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/profile",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "profile"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "profile"
+          ]
         }
       }
     },
@@ -338,8 +402,13 @@
         "method": "GET",
         "url": {
           "raw": "{{baseUrl}}/api/categories",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "categories"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categories"
+          ]
         }
       }
     },
@@ -361,21 +430,45 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "body": {
           "mode": "formdata",
           "formdata": [
-            { "key": "title", "value": "Free Item Test", "type": "text" },
-            { "key": "description", "value": "Should fail because price must be > 0", "type": "text" },
-            { "key": "price", "value": "0", "type": "text" },
-            { "key": "categoryId", "value": "{{categoryId}}", "type": "text" }
+            {
+              "key": "title",
+              "value": "Free Item Test",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Should fail because price must be > 0",
+              "type": "text"
+            },
+            {
+              "key": "price",
+              "value": "0",
+              "type": "text"
+            },
+            {
+              "key": "categoryId",
+              "value": "{{categoryId}}",
+              "type": "text"
+            }
           ]
         },
         "url": {
           "raw": "{{baseUrl}}/api/listings",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "listings"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "listings"
+          ]
         }
       }
     },
@@ -403,8 +496,13 @@
         "method": "GET",
         "url": {
           "raw": "{{baseUrl}}/api/listings",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "listings"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "listings"
+          ]
         }
       }
     },
@@ -432,22 +530,50 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "body": {
           "mode": "formdata",
           "formdata": [
-            { "key": "title", "value": "Sony WH-1000XM4 Wireless Headphones", "type": "text" },
-            { "key": "description", "value": "Excellent noise cancelling headphones in black. Lightly used.", "type": "text" },
-            { "key": "price", "value": "299.99", "type": "text" },
-            { "key": "categoryId", "value": "{{categoryId}}", "type": "text" },
-            { "key": "photoUrls", "value": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e", "type": "text" }
+            {
+              "key": "title",
+              "value": "Sony WH-1000XM4 Wireless Headphones",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Excellent noise cancelling headphones in black. Lightly used.",
+              "type": "text"
+            },
+            {
+              "key": "price",
+              "value": "299.99",
+              "type": "text"
+            },
+            {
+              "key": "categoryId",
+              "value": "{{categoryId}}",
+              "type": "text"
+            },
+            {
+              "key": "photoUrls",
+              "value": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+              "type": "text"
+            }
           ]
         },
         "url": {
           "raw": "{{baseUrl}}/api/listings",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "listings"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "listings"
+          ]
         }
       }
     },
@@ -475,12 +601,22 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/listings/user/me",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "listings", "user", "me"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "listings",
+            "user",
+            "me"
+          ]
         }
       }
     },
@@ -508,8 +644,14 @@
       "request": {
         "method": "PUT",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -517,8 +659,14 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/listings/{{listingId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "listings", "{{listingId}}"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "listings",
+            "{{listingId}}"
+          ]
         }
       }
     },
@@ -545,8 +693,14 @@
       "request": {
         "method": "PATCH",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -554,8 +708,15 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/listings/{{listingId}}/sold",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "listings", "{{listingId}}", "sold"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "listings",
+            "{{listingId}}",
+            "sold"
+          ]
         }
       }
     },
@@ -582,12 +743,21 @@
       "request": {
         "method": "DELETE",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/listings/{{listingId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "listings", "{{listingId}}"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "listings",
+            "{{listingId}}"
+          ]
         }
       }
     },
@@ -610,8 +780,14 @@
         "method": "GET",
         "url": {
           "raw": "{{baseUrl}}/api/listings/{{listingId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "listings", "{{listingId}}"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "listings",
+            "{{listingId}}"
+          ]
         }
       }
     },
@@ -638,22 +814,50 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "body": {
           "mode": "formdata",
           "formdata": [
-            { "key": "title", "value": "Nintendo Switch Console for Messaging Test", "type": "text" },
-            { "key": "description", "value": "Complete with cables and dock.", "type": "text" },
-            { "key": "price", "value": "299.00", "type": "text" },
-            { "key": "categoryId", "value": "{{categoryId}}", "type": "text" },
-            { "key": "photoUrls", "value": "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9", "type": "text" }
+            {
+              "key": "title",
+              "value": "Nintendo Switch Console for Messaging Test",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Complete with cables and dock.",
+              "type": "text"
+            },
+            {
+              "key": "price",
+              "value": "299.00",
+              "type": "text"
+            },
+            {
+              "key": "categoryId",
+              "value": "{{categoryId}}",
+              "type": "text"
+            },
+            {
+              "key": "photoUrls",
+              "value": "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9",
+              "type": "text"
+            }
           ]
         },
         "url": {
           "raw": "{{baseUrl}}/api/listings",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "listings"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "listings"
+          ]
         }
       }
     },
@@ -686,7 +890,10 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -694,8 +901,14 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/auth/register",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "register"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
         }
       }
     },
@@ -722,7 +935,10 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -730,8 +946,14 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/auth/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "login"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
         }
       }
     },
@@ -759,8 +981,14 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{buyerToken}}"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -768,8 +996,13 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/messages",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "messages"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "messages"
+          ]
         }
       }
     },
@@ -796,8 +1029,14 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{buyerToken}}"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -805,8 +1044,13 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/messages",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "messages"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "messages"
+          ]
         }
       }
     },
@@ -834,12 +1078,21 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{buyerToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/messages/inbox",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "messages", "inbox"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "messages",
+            "inbox"
+          ]
         }
       }
     },
@@ -868,12 +1121,22 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{buyerToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/messages/threads/{{threadId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "messages", "threads", "{{threadId}}"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "messages",
+            "threads",
+            "{{threadId}}"
+          ]
         }
       }
     },
@@ -900,8 +1163,14 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -909,8 +1178,15 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/messages/threads/{{threadId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "messages", "threads", "{{threadId}}"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "messages",
+            "threads",
+            "{{threadId}}"
+          ]
         }
       }
     },
@@ -938,7 +1214,10 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -946,8 +1225,14 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/auth/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "auth", "login"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
         }
       }
     },
@@ -977,12 +1262,21 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/admin/users",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "admin", "users"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "admin",
+            "users"
+          ]
         }
       }
     },
@@ -1008,8 +1302,14 @@
       "request": {
         "method": "PATCH",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -1017,8 +1317,16 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/admin/users/{{targetUserId}}/status",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "admin", "users", "{{targetUserId}}", "status"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "admin",
+            "users",
+            "{{targetUserId}}",
+            "status"
+          ]
         }
       }
     },
@@ -1045,12 +1353,21 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/admin/listings",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "admin", "listings"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "admin",
+            "listings"
+          ]
         }
       }
     },
@@ -1076,12 +1393,22 @@
       "request": {
         "method": "DELETE",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/admin/listings/{{listingId}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "admin", "listings", "{{listingId}}"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "admin",
+            "listings",
+            "{{listingId}}"
+          ]
         }
       }
     }

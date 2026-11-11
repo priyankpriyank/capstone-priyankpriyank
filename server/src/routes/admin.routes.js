@@ -21,3 +21,4 @@ router.get("/listings", getAllListings);
 router.delete("/listings/:listingId", deleteListing);
 
 module.exports = router;
+
