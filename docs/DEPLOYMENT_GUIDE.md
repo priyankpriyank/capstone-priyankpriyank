@@ -104,3 +104,4 @@ If you prefer Vercel for zero-configuration React deployment:
 - [ ] User can register and log in on live URL
 - [ ] User can create, edit, mark sold, and delete a listing on live URL
 - [ ] Refreshing on sub-routes (`/listings`, `/profile`, `/create-listing`) renders properly without 404
+

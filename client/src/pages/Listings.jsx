@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import api, { getImageUrl } from "../services/api";
+import api from "../services/api";
 import "./Listings.css";
 
 function Listings() {
@@ -69,6 +69,12 @@ function Listings() {
         return new Date(b.created_at) - new Date(a.created_at);
       });
   }, [listings, searchQuery, selectedCategory, sortBy]);
+
+  function getImageUrl(path) {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    return `http://localhost:5000${path}`;
+  }
 
   return (
     <div className="listings-page-container">

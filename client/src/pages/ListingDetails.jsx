@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import api, { getImageUrl } from "../services/api";
+import api from "../services/api";
 import "./ListingDetails.css";
 
 function ListingDetails() {
@@ -101,6 +101,12 @@ function ListingDetails() {
   });
 
   const isOwner = user && String(user.user_id) === String(listing.owner_user_id);
+
+  function getImageUrl(path) {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    return `http://localhost:5000${path}`;
+  }
 
   // Week 6: Toggle Listing Status (Req 4.6)
   async function handleToggleStatus() {
