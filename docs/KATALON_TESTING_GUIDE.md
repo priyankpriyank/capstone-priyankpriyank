@@ -14,6 +14,7 @@ This guide documents how to execute the automated frontend tests for **NexTo** u
 | **FE-04** | `FE-04_Create_Listing_And_View_Details` | Login → Create Listing form validation → Submit item → Redirect & verify card in listings feed | **Req 3.1, 3.2, 4.1** |
 | **FE-05** | `FE-05_Listing_Management_Edit_Sold_Delete` | Create Listing → View Details toolbar → Mark Sold badge → Edit Price drawer → Delete confirmation modal | **Req 4.4, 4.5, 4.6 (Milestone 2)** |
 | **FE-06** | `FE-06_Messaging_Thread_Reuse_And_Inbox` | Seller creates listing → Buyer sends inquiry from details → Redirect to chat → Thread reuse message → Seller checks inbox & replies | **Req 5.1, 5.2, 5.3, 5.4, 5.5 (Week 7)** |
+| **FE-07** | `FE-07_Admin_Moderation_Users_And_Listings` | Regular user blocked from `/admin` → Admin logs in → Views users & deactivates/reactivates member → Views listings & deletes listing with modal | **Req 6.1 - 6.5, 1.5 (Week 8)** |
 
 ---
 

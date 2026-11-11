@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:5173" />
+<title>FE-07_Admin_Moderation_Users_And_Listings</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">FE-07: Admin Moderation of Users and Listings (Req 6.1 - 6.5, 1.5)</td></tr>
+</thead>
+<tbody>
+<!-- 1. Generate Regular User Credentials -->
+<tr>
+	<td>storeEval</td>
+	<td>&quot;seller_w8_&quot; + new Date().getTime() + &quot;@nexto.com&quot;</td>
+	<td>sellerEmail</td>
+</tr>
+<tr>
+	<td>storeEval</td>
+	<td>&quot;Standard Member &quot; + new Date().getTime().toString().slice(-4)</td>
+	<td>sellerName</td>
+</tr>
+
+<!-- 2. Register Regular User -->
+<tr>
+	<td>open</td>
+	<td>/register</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=fullName</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=fullName</td>
+	<td>${sellerName}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${sellerEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=register-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=register-success-msg</td>
+	<td>5000</td>
+</tr>
+
+<!-- 3. Log in as Regular User -->
+<tr>
+	<td>open</td>
+	<td>/login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=email</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>${sellerEmail}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=login-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=nav-btn-logout</td>
+	<td>5000</td>
+</tr>
+
+<!-- 4. Verify Non-Admin Access to /admin is Blocked (Req 1.5) -->
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>id=nav-link-admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=home-welcome-title</td>
+	<td>5000</td>
+</tr>
+
+<!-- 5. Create Listing to Moderate (Req 4.1, 4.1.2) -->
+<tr>
+	<td>open</td>
+	<td>/create-listing</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listing-title-input</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=listing-title-input</td>
+	<td>Admin Moderation Test Camera</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=listing-category-select</td>
+	<td>index=1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=listing-price-input</td>
+	<td>450.00</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=listing-description-input</td>
+	<td>Sony Alpha mirrorless digital camera listed to test admin delete moderation functionality.</td>
+</tr>
+<!-- Inject required photo data -->
+<tr>
+	<td>storeEval</td>
+	<td>(function() { var dt = new DataTransfer(); var f = new File(['dummy camera content'], 'camera.jpg', { type: 'image/jpeg' }); dt.items.add(f); var inp = document.getElementById('listing-photos-input'); inp.files = dt.files; inp.dispatchEvent(new Event('change', { bubbles: true })); return true; })()</td>
+	<td>unused</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=listing-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=listing-success-msg</td>
+	<td>8000</td>
+</tr>
+
+<!-- 6. Logout Regular User -->
+<tr>
+	<td>click</td>
+	<td>id=nav-btn-logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=login-submit-btn</td>
+	<td>5000</td>
+</tr>
+
+<!-- 7. Login as System Administrator -->
+<tr>
+	<td>open</td>
+	<td>/login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=email</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=email</td>
+	<td>admin@nexto.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>P@ssw0rd1!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=login-submit-btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=nav-link-admin</td>
+	<td>5000</td>
+</tr>
+
+<!-- 8. Open Admin Moderation Panel (Req 6.1) -->
+<tr>
+	<td>click</td>
+	<td>id=nav-link-admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=admin-dashboard-container</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>id=stat-total-users</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>id=stat-total-listings</td>
+	<td></td>
+</tr>
+
+<!-- 9. Search & Moderate User Account (Req 6.2, 6.3) -->
+<tr>
+	<td>type</td>
+	<td>id=admin-user-search-input</td>
+	<td>${sellerEmail}</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>css=.btn-action-deactivate</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.btn-action-deactivate</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=admin-action-success-msg</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>css=.btn-action-reactivate</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.btn-action-reactivate</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=admin-action-success-msg</td>
+	<td>5000</td>
+</tr>
+
+<!-- 10. Switch to Listings Moderation Tab & Delete Listing (Req 6.4, 6.5) -->
+<tr>
+	<td>click</td>
+	<td>id=tab-btn-listings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=admin-listing-search-input</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=admin-listing-search-input</td>
+	<td>Admin Moderation Test Camera</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>css=.btn-action-delete</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=.btn-action-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=admin-listing-delete-modal</td>
+	<td>3000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=btn-confirm-admin-delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=admin-action-success-msg</td>
+	<td>5000</td>
+</tr>
+
+<!-- 11. Clean Logout -->
+<tr>
+	<td>click</td>
+	<td>id=nav-btn-logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=login-submit-btn</td>
+	<td>5000</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

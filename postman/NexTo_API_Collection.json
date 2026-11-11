@@ -50,6 +50,16 @@
       "key": "threadId",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "targetUserId",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -901,6 +911,177 @@
           "raw": "{{baseUrl}}/api/messages/threads/{{threadId}}",
           "host": ["{{baseUrl}}"],
           "path": ["api", "messages", "threads", "{{threadId}}"]
+        }
+      }
+    },
+    {
+      "name": "25. Admin - Login Administrator (Req 1.5)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Admin logged in successfully', function () {",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.token).to.be.a('string');",
+              "    pm.collectionVariables.set('adminToken', jsonData.token);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@nexto.com\",\n  \"password\": \"P@ssw0rd1!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "26. Admin - View All Users (Req 6.1)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Admin retrieves all user accounts', function () {",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.users).to.be.an('array');",
+              "    if (jsonData.users.length > 0) {",
+              "        pm.collectionVariables.set('targetUserId', String(jsonData.users[0].user_id));",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "users"]
+        }
+      }
+    },
+    {
+      "name": "27. Admin - Deactivate User Account (Req 6.2)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK or 400 self-guard', function () {",
+              "    pm.expect([200, 400]).to.include(pm.response.code);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Response returns expected success or self-protection', function () {",
+              "    pm.expect(jsonData.message).to.be.a('string');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"deactivated\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/users/{{targetUserId}}/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "users", "{{targetUserId}}", "status"]
+        }
+      }
+    },
+    {
+      "name": "28. Admin - View All Listings (Req 6.4)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Admin retrieves all listings', function () {",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.listings).to.be.an('array');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/listings",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "listings"]
+        }
+      }
+    },
+    {
+      "name": "29. Admin - Delete Any Listing (Req 6.5)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK or 404', function () {",
+              "    pm.expect([200, 404]).to.include(pm.response.code);",
+              "});",
+              "const jsonData = pm.response.json();",
+              "pm.test('Handled deletion properly', function () {",
+              "    pm.expect(jsonData.message).to.be.a('string');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/listings/{{listingId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "listings", "{{listingId}}"]
         }
       }
     }
